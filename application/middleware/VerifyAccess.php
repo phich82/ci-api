@@ -1,6 +1,10 @@
 <?php
 /**
- * <File description>
+ * Verify access of user to our system through X-API-TOKEN on the request headers
+ * Setup in hook
+ * Called immediately prior to any of your controllers being called.
+ * All base classes, routing, and security checks have been done
+ *
  * Php version 7.0.0
  *
  * @category Description
@@ -35,9 +39,6 @@ class VerifyAccess
      */
     public function handle()
     {
-        $CI = app()->load->library('session');
-        var_dump($CI->session);die();
-        var_dump(app()->lang->get_userdata('language'));die();
         if (isApi()) {
             $headers = app()->input->request_headers();
             if (!isset($headers[Constant::X_API_TOKEN_KEY])) {

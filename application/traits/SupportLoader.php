@@ -15,13 +15,6 @@ trait SupportLoader
         return load_class($this->classLoaded($method), 'core', $args);
     }
 
-    public function isApi()
-    {
-        $this->loader()->helper('Constant');
-        $pattern = '#^'.(Constant::PREFIX_API ?? 'api').'#i';
-        return preg_match($pattern, $this->uri()->uri_string()) === 1;
-    }
-
     /**
      * Get the exact name of the loaded class from the given name
      *

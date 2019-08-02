@@ -11,3 +11,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |	https://codeigniter.com/user_guide/general/hooks.html
 |
 */
+$hook['pre_controller'][] = [
+	'class'    => 'VerifyAccess',
+	'function' => 'handle',
+	'filename' => 'VerifyAccess.php',
+	'filepath' => 'middleware',
+	'params'   => []
+];

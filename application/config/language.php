@@ -21,9 +21,7 @@ $config['supported_languages'] = [
 | Default Language
 |--------------------------------------------------------------------------
 |
-| If no language is specified, which one to use? Must be in the array above
-|
-|   en
+| If no language is specified, the default language is 'en'
 |
 */
 $config['default_language'] = 'en';

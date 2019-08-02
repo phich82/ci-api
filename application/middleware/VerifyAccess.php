@@ -42,11 +42,11 @@ class VerifyAccess
         if (isApi()) {
             $headers = app()->input->request_headers();
             if (!isset($headers[Constant::X_API_TOKEN_KEY])) {
-                return $this->responseError('Missing Token on Header', Response::HTTP_NOT_FOUND);
+                return $this->responseError(trans('token_missing'), Response::HTTP_NOT_FOUND);
             }
             $token = $headers[Constant::X_API_TOKEN_KEY];
             if (!in_array($token, $this->_tokensAllowed()) || !$this->_validatePayload($token)) {
-                return $this->responseError('Token is invalid', Response::HTTP_BAD_REQUEST);
+                return $this->responseError(trans('token_invalid'), Response::HTTP_BAD_REQUEST);
             }
         }
     }

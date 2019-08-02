@@ -1,3 +1,3 @@
 <?php
 
-$lang['title'] = 'CondeIgniter JP';
+$lang['title'] = 'ホーム';

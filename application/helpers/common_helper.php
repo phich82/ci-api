@@ -65,27 +65,52 @@ if (!function_exists('trans')) {
      *
      * @param  string $key
      * @param  string|array $filenames
+     * @param  string|array $replaces ['attribute1' => 'any', 'attribute2' => 'any', ...]
      * @param  string $lang
      *
      * @return string|null
      */
-    function trans($key, $filenames = null, $lang = null)
+    function trans($key, $filenames = null, $replaces = [], $lang = null)
     {
         $currentLang = $lang ?: currentLang();
+        $keysNested  = explode('.', $key);
+        $keyFirst    = array_shift($keysNested);
+        // Load the language files if any
         if (!empty($filenames)) {
             // get only the language data of the specified languages withnot changing the system language data before
             $dataLang = (function ($currentLang, $filenames) {
+                ob_start();
                 $lang = [];
                 $filenames = is_array($filenames) ? $filenames : [$filenames];
                 foreach ($filenames as $filename) {
                     include(APPPATH.'language/'.$currentLang.'/'.$filename.'_lang.php');
                 }
+                ob_end_clean();
                 return $lang;
             })($currentLang, $filenames);
-            return $dataLang[$key] ?? null;
+            $dataLang = $dataLang[$keyFirst] ?? null;
+        } else {
+            $result = app()->lang->line($keyFirst);
+            $dataLang = ($result === false) ? null : $result;
         }
-        $result = app()->lang->line($key);
-        return  $result === false ? null : $result;
+        // If key not found
+        if ($dataLang === null) {
+            return null;
+        }
+        // loop the nested keys if any
+        foreach ($keysNested as $keyNested) {
+            $dataLang = $dataLang[$keyNested];
+        }
+        // replace :attributes in string if any
+        if (!empty($replaces)) {
+            $prefix = ':';
+            $dataLang = str_replace(
+                array_map(function ($item) use ($prefix) {return $prefix.$item;}, array_keys($replaces)),
+                array_values($replaces),
+                $dataLang
+            );
+        }
+        return $dataLang;
     }
 }
 
